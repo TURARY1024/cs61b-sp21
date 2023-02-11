@@ -193,6 +193,7 @@ public class Model extends Observable {
         for (int i = 0; i < b.size(); i++) {
             for (int j = 0; j < b.size(); j++) {
                 if (b.tile(i, j) != null) {
+                    //Check if any MAX_PIECE exits
                     if (b.tile(i, j).value() == MAX_PIECE) {
                         return true;
                     }
@@ -209,8 +210,36 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
-        return false;
+        if (emptySpaceExists(b)) {
+            return true;//Fit first point
+        }else{
+            //Enter this block means there is no empty space
+            for(int i=0;i<b.size();i++){
+                for(int j=0;j<b.size();j++){
+                    if(i+1< b.size()){
+                        if(b.tile(i,j).value()==b.tile(i+1,j).value()){
+                            return true;
+                        }
+                    }
+                    if(i-1>=0){
+                        if(b.tile(i,j).value()==b.tile(i-1,j).value()){
+                            return true;
+                        }
+                    }
+                    if(j+1< b.size()){
+                        if(b.tile(i,j).value()==b.tile(i,j+1).value()){
+                            return true;
+                        }
+                    }
+                    if(j-1>=0){
+                        if(b.tile(i,j).value()==b.tile(i,j-1).value()){
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }
 
 
