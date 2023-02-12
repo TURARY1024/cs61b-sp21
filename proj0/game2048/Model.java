@@ -7,7 +7,7 @@ import java.util.Observable;
 /**
  * The state of a game of 2048.
  *
- * @author TODO: TURARY
+ * @author TURARY
  */
 public class Model extends Observable {
     /**
@@ -137,28 +137,32 @@ public class Model extends Observable {
      * and the trailing tile does not.
      */
     public boolean tilt(Side side) {
-        boolean changed=false;
+        boolean changed = false;
 
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+
         for (int x = 0; x < this.board.size(); x++) {
             for (int y = 0; y < this.board.size(); y++) {
-               // changed = false;
                 Tile t = this.board.tile(x, y);
                 if (t != null) {
                     this.board.move(3, 0, t);
                     changed = true;
                     this.score += 10;
                 }
-
             }
         }
 
+        System.out.println("======================================");
+        System.out.println(this.board.toString());//print current board
         checkGameOver();
         if (changed) {
             setChanged();
         }
+
+
+
         return changed;
     }
 
