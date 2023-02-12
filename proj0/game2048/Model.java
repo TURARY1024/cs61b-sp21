@@ -147,19 +147,19 @@ public class Model extends Observable {
             for (int y = 0; y < this.board.size(); y++) {
                 Tile t = this.board.tile(x, y);
                 if (t != null) {
-                    this.board.move(3, 0, t);
+                    this.board.move(1, 0, t);
                     changed = true;
                     this.score += 10;
                 }
             }
         }
 
-        System.out.println("======================================");
-        System.out.println(this.board.toString());//print current board
         checkGameOver();
         if (changed) {
             setChanged();
         }
+        System.out.println("======================================");
+        System.out.println(this.board.toString());//print current board
 
 
 
