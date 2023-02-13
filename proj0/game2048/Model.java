@@ -139,28 +139,61 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
+        //TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        // 2/13
+        // Don't need to add any new tile!
+        // Tile class will only use .value()method
+        // Maybe don't need to use Side class
+        // Board class setViewingPerspective() tile() move()-return true if merged
+        // [getRandomNonNullTile]->not necessary
+        // atLeastOneMove() emptySpace() maxTileExists()
 
-        for (int x = 0; x < this.board.size(); x++) {
-            for (int y = 0; y < this.board.size(); y++) {
-                Tile t = this.board.tile(x, y);
+        board.setViewingPerspective(side);//change direction
+
+        Tile t;//I'm dealing with this tile
+        Tile temp;//For checking upper tile whether exists or can be merged
+        for (int x = board.size() - 1; x >= 0; x--) {
+            for (int y = board.size() - 1; y >= 0; y--) {
+                int countMovement = 0;//count this tile can move how many step
+                Boolean flag = true;//Whether merged or not
+                t = board.tile(x, y);
                 if (t != null) {
-                    this.board.move(1, 0, t);
+                    for (int col = 1; col < board.size() - y; col++) {
+                        System.out.println(t + " " + col + " " + countMovement);
+                        temp = tile(x, y + col);
+                        if (temp == null) {
+                            countMovement++;
+                            continue;
+                        }
+                        //Merge situation
+                        if (t.value() == temp.value()) {
+                            countMovement++;
+                            System.out.println("Check1");
+                            if (flag) {
+                                if (board.move(x, y + countMovement, t)) {
+                                    score += t.value();
+                                    flag = false;
+                                }
+                            }
+                        }
+                    }
+
+                    System.out.println("Check2");
+                    board.move(x, y + countMovement , t);
                     changed = true;
-                    this.score += 10;
                 }
             }
         }
 
+        this.board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
         System.out.println("======================================");
         System.out.println(this.board.toString());//print current board
-
 
 
         return changed;
