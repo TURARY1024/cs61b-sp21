@@ -137,6 +137,8 @@ public class Model extends Observable {
      * and the trailing tile does not.
      */
     public boolean tilt(Side side) {
+        System.out.println("======================================");
+        System.out.println(this.board.toString());//print current board
         boolean changed = false;
 
         //TODO: Modify this.board (and perhaps this.score) to account
@@ -154,14 +156,18 @@ public class Model extends Observable {
 
         Tile t;//I'm dealing with this tile
         Tile temp;//For checking upper tile whether exists or can be merged
+        boolean flags[][]=new boolean[board.size()][board.size()];//Whether merged or not
+        for(int i=0;i<board.size();i++){
+            for(int j=0;j<board.size();j++){
+                flags[i][j]=true;
+            }
+        }
         for (int x = board.size() - 1; x >= 0; x--) {
             for (int y = board.size() - 1; y >= 0; y--) {
                 int countMovement = 0;//count this tile can move how many step
-                Boolean flag = true;//Whether merged or not
                 t = board.tile(x, y);
                 if (t != null) {
                     for (int col = 1; col < board.size() - y; col++) {
-                        System.out.println(t + " " + col + " " + countMovement);
                         temp = tile(x, y + col);
                         if (temp == null) {
                             countMovement++;
@@ -169,19 +175,28 @@ public class Model extends Observable {
                         }
                         //Merge situation
                         if (t.value() == temp.value()) {
+                            System.out.println("Check1"+t);
                             countMovement++;
-                            System.out.println("Check1");
-                            if (flag) {
+                            if (flags[x][y]&&flags[x][y+countMovement]) {
+                                System.out.println("Check2"+t);
+
                                 if (board.move(x, y + countMovement, t)) {
+                                    System.out.println("Check3"+t);
                                     score += t.value();
-                                    flag = false;
+                                    flags[x][y] = false;
+                                    break;
                                 }
                             }
                         }
                     }
-
-                    System.out.println("Check2");
-                    board.move(x, y + countMovement , t);
+                    if(flags[x][y]){
+                        if(flags[x][y+countMovement]) {
+                            System.out.println("Check4" + t);
+                            board.move(x, y + countMovement, t);
+                        }else {
+                            board.move(x, y + countMovement-1, t);
+                        }
+                    }
                     changed = true;
                 }
             }
@@ -192,8 +207,7 @@ public class Model extends Observable {
         if (changed) {
             setChanged();
         }
-        System.out.println("======================================");
-        System.out.println(this.board.toString());//print current board
+
 
 
         return changed;
